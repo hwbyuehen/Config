@@ -176,7 +176,15 @@ public abstract class Parseable implements ConfigParseable {
 
         @Override
         protected Reader reader() throws IOException {
-            return null;
+            throw new ConfigException.BugOrBroken("reader() should not be called on props");
+        }
+
+        @Override
+        protected AbstractConfigObject rawParseValue(ConfigOrigin origin,
+                                                     ConfigParseOptions finalOptions) {
+            if (ConfigImpl.traceLoadsEnabled())
+                trace("Loading config from properties " + props);
+            return PropertiesParser.fromProperties(origin, props);
         }
 
         @Override

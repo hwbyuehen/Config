@@ -48,4 +48,13 @@ final class SimpleConfigObject extends AbstractConfigObject implements Serializa
                 Collections.<String, AbstractConfigValue> emptyMap());
     }
 
+    private SimpleConfigObject newCopy(ResolveStatus newStatus, ConfigOrigin newOrigin,
+                                       boolean newIgnoresFallbacks) {
+        return new SimpleConfigObject(newOrigin, value, newStatus, newIgnoresFallbacks);
+    }
+
+    @Override
+    protected SimpleConfigObject newCopy(ResolveStatus newStatus, ConfigOrigin newOrigin) {
+        return newCopy(newStatus, newOrigin, ignoresFallbacks);
+    }
 }
