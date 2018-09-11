@@ -35,7 +35,8 @@ public final class ConfigFactory {
         return ConfigImpl.computeCachedConfig(loader, "load", new Callable<Config>() {
             @Override
             public Config call() {
-                return load(loader, defaultApplication(withLoader));
+//                return load(loader, defaultApplication(withLoader));
+                return null;//TODO
             }
         });
     }

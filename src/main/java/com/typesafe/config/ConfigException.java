@@ -15,6 +15,51 @@ public abstract class ConfigException extends RuntimeException implements Serial
         this.origin = null;
     }
 
+    protected ConfigException(ConfigOrigin origin, String message,
+                              Throwable cause) {
+        super(origin.description() + ": " + message, cause);
+        this.origin = origin;
+    }
+
+    /**
+     * 值的类型不匹配异常
+     */
+    public static class WrongType extends ConfigException {
+        private static final long serialVersionUID = 1L;
+
+        public WrongType(ConfigOrigin origin, String path, String expected, String actual,
+                         Throwable cause) {
+            super(origin, path + " has type " + actual + " rather than " + expected, cause);
+        }
+
+        public WrongType(ConfigOrigin origin, String path, String expected, String actual) {
+            this(origin, path, expected, actual, null);
+        }
+
+        public WrongType(ConfigOrigin origin, String message, Throwable cause) {
+            super(origin, message, cause);
+        }
+
+        public WrongType(ConfigOrigin origin, String message) {
+            super(origin, message, null);
+        }
+    }
+
+    /**
+     * IO相关异常
+     */
+    public static class IO extends ConfigException {
+        private static final long serialVersionUID = 1L;
+
+        public IO(ConfigOrigin origin, String message, Throwable cause) {
+            super(origin, message, cause);
+        }
+
+        public IO(ConfigOrigin origin, String message) {
+            this(origin, message, null);
+        }
+    }
+
     /**
      * 处理不了的问题
      */
