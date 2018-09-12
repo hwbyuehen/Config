@@ -74,4 +74,19 @@ public abstract class ConfigException extends RuntimeException implements Serial
             this(message, null);
         }
     }
+
+    /**
+     * 不属于其他类别的异常
+     */
+    public static class Generic extends ConfigException {
+        private static final long serialVersionUID = 1L;
+
+        public Generic(String message, Throwable cause) {
+            super(message, cause);
+        }
+
+        public Generic(String message) {
+            this(message, null);
+        }
+    }
 }

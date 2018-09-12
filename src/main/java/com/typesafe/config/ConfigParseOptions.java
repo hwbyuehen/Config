@@ -5,7 +5,7 @@ package com.typesafe.config;
  */
 public final class ConfigParseOptions {
     final ConfigSyntax syntax;
-    final String originDescription;
+    final String originDescription;//组装ConfigOrigin
     final boolean allowMissing;
     final ConfigIncluder includer;
     final ClassLoader classLoader;
@@ -116,5 +116,9 @@ public final class ConfigParseOptions {
         else
             return new ConfigParseOptions(this.syntax, this.originDescription, this.allowMissing,
                     this.includer, loader);
+    }
+    
+    public ClassLoader getClassLoader() {
+        return classLoader;
     }
 }

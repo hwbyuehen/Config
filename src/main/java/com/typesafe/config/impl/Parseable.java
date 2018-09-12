@@ -184,6 +184,7 @@ public abstract class Parseable implements ConfigParseable {
                                                      ConfigParseOptions finalOptions) {
             if (ConfigImpl.traceLoadsEnabled())
                 trace("Loading config from properties " + props);
+            //Parser解析属性文件
             return PropertiesParser.fromProperties(origin, props);
         }
 

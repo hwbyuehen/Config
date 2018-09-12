@@ -1,5 +1,6 @@
 package com.typesafe.config.impl;
 
+import com.typesafe.config.ConfigMergeable;
 import com.typesafe.config.ConfigOrigin;
 import com.typesafe.config.ConfigValueType;
 
@@ -7,7 +8,7 @@ import com.typesafe.config.ConfigValueType;
  * @author 吃土的飞鱼
  * @date 2018/9/11
  */
-public interface ConfigValue {
+public interface ConfigValue extends ConfigMergeable {
     /**
      * 值的源信息
      * @return
@@ -19,4 +20,7 @@ public interface ConfigValue {
      * @return
      */
     ConfigValueType valueType();
+
+    @Override
+    ConfigValue withFallback(ConfigMergeable other);
 }

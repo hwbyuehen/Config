@@ -92,6 +92,10 @@ final class Path {
         return pb.result();
     }
 
+    /**
+     * 节点长度
+     * @return
+     */
     int length() {
         int count = 1;
         Path p = remainder;
@@ -131,7 +135,7 @@ final class Path {
         for (int i = 0; i < length; ++i) {
             char c = s.charAt(i);
 
-            if (Character.isLetterOrDigit(c) || c == '-' || c == '_')
+            if (Character.isLetterOrDigit(c) || c == '-' || c == '_')//数字，字母，-_
                 continue;
             else
                 return true;
@@ -150,6 +154,10 @@ final class Path {
         }
     }
 
+    /**
+     * 还原原来的key
+     * @return
+     */
     String render() {
         StringBuilder sb = new StringBuilder();
         appendToStringBuilder(sb);

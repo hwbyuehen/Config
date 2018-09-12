@@ -53,6 +53,7 @@ public class PropertiesParser {
     }
 
     private static <K, V> AbstractConfigObject fromEntrySet(ConfigOrigin origin, Set<Map.Entry<K, V>> entries) {
+        //将key转为Path单链表，ex. java.home -> java--home
         final Map<Path, Object> pathMap = getPathMap(entries);
         return fromPathMap(origin, pathMap, true /* from properties */);
     }
@@ -72,16 +73,15 @@ public class PropertiesParser {
     private static AbstractConfigObject fromPathMap(ConfigOrigin origin,
                                                     Map<Path, Object> pathMap, boolean convertedFromProperties) {
         /*
-         * First, build a list of paths that will have values, either string or
-         * object values.
+         * 首先，构建一系列path及对应字符串或对象值.
          */
-        Set<Path> scopePaths = new HashSet<Path>();
-        Set<Path> valuePaths = new HashSet<Path>();
+        Set<Path> scopePaths = new HashSet<Path>();//记录所有parent的path
+        Set<Path> valuePaths = new HashSet<Path>();//记录所有的path
         for (Path path : pathMap.keySet()) {
             // add value's path
             valuePaths.add(path);
 
-            // all parent paths are objects
+            // 所有path的父path都是对象
             Path next = path.parent();
             while (next != null) {
                 scopePaths.add(next);
@@ -109,10 +109,10 @@ public class PropertiesParser {
         }
 
         /*
-         * Create maps for the object-valued values.
+         * 创建map来存放对象值.
          */
         Map<String, AbstractConfigValue> root = new HashMap<String, AbstractConfigValue>();
-        Map<Path, Map<String, AbstractConfigValue>> scopes = new HashMap<Path, Map<String, AbstractConfigValue>>();
+        Map<Path, Map<String, AbstractConfigValue>> scopes = new HashMap<Path, Map<String, AbstractConfigValue>>();//父path，子属性及值
 
         for (Path path : scopePaths) {
             Map<String, AbstractConfigValue> scope = new HashMap<String, AbstractConfigValue>();
@@ -149,7 +149,7 @@ public class PropertiesParser {
          */
         List<Path> sortedScopePaths = new ArrayList<Path>();
         sortedScopePaths.addAll(scopePaths);
-        // sort descending by length
+        // 根据Path节点长度倒序
         Collections.sort(sortedScopePaths, new Comparator<Path>() {
             @Override
             public int compare(Path a, Path b) {

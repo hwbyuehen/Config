@@ -39,8 +39,22 @@ public class ConfigImpl {
                 cache.clear();
                 currentSystemProperties = systemProperties;
             }
-            //TODO
-            return null;
+            
+            Config config = cache.get(key);
+            if (config == null) {
+                try {
+                    config = updater.call();
+                } catch (RuntimeException e) {
+                    throw e; // 这个将包含ConfigException
+                } catch (Exception e) {
+                    throw new ConfigException.Generic(e.getMessage(), e);
+                }
+                if (config == null)
+                    throw new ConfigException.BugOrBroken("null config from cache updater");
+                cache.put(key, config);
+            }
+
+            return config;
         }
     }
 
@@ -93,7 +107,7 @@ public class ConfigImpl {
                 ConfigParseOptions.defaults().setOriginDescription("system properties")).parse();
     }
 
-    private static class SystemPropertiesHolder {
+    private static class SystemPropertiesHolder {//获取环境变量的为单例
         // 这个不是最终的，之后有reloadSystemPropertiesConfig的hack
         static volatile AbstractConfigObject systemProperties = loadSystemProperties();
     }
@@ -212,6 +226,19 @@ public class ConfigImpl {
                     "bug in method caller: not valid to create ConfigValue from: "
                             + object);
         }
+    }
+
+    public static Config defaultReference(final ClassLoader loader) {
+        return computeCachedConfig(loader, "defaultReference", new Callable<Config>() {
+            @Override
+            public Config call() {
+                Config unresolvedResources = Parseable
+                        .newResources("reference.conf",
+                                ConfigParseOptions.defaults().setClassLoader(loader))
+                        .parse().toConfig();
+                return systemPropertiesAsConfig().withFallback(unresolvedResources).resolve();
+            }
+        });
     }
     
 
